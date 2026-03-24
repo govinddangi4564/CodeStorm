@@ -19,22 +19,9 @@ dotenv.config();
 
 const app = express();
 
-// CORS configuration for production + development
-const allowedOrigins = [
-  process.env.CLIENT_URL,
-  'http://localhost:5173',
-  'http://localhost:3000',
-].filter(Boolean);
-
+// CORS configuration
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, curl, etc.)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.some(allowed => origin.startsWith(allowed))) {
-      return callback(null, true);
-    }
-    callback(new Error('Not allowed by CORS'));
-  },
+  origin: true, // Automatically reflect requesting origin
   credentials: true,
 }));
 
@@ -55,6 +42,9 @@ app.get('/health', (req, res) => res.status(200).json({
   dbConnected: isConnected,
   message: isConnected ? 'All good' : 'DB connection failed - check Vercel environment variables'
 }));
+
+// Root endpoint just to say we're alive
+app.get('/', (req, res) => res.status(200).send('Climate API is running! 🌍'));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/articles', articleRoutes);
