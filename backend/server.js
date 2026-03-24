@@ -16,10 +16,6 @@ import footprintRoutes from './routes/footprint.js';
 import challengeRoutes from './routes/challenges.js';
 
 dotenv.config();
-await connectDB();
-
-// Sync models
-sequelize.sync({ alter: true }).then(() => console.log('Sequelize Models synced'));
 
 const app = express();
 
@@ -53,8 +49,11 @@ app.use('/api/pledge', pledgeRoutes);
 app.use('/api/footprint', footprintRoutes);
 app.use('/api/challenges', challengeRoutes);
 
-// Only listen when NOT on Vercel (Vercel uses serverless, not app.listen)
+// Only connect DB and listen when NOT on Vercel
+// On Vercel, api/index.js handles DB connection per cold start
 if (!process.env.VERCEL) {
+  await connectDB();
+  sequelize.sync({ alter: true }).then(() => console.log('Sequelize Models synced'));
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
