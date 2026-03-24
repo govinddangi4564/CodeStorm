@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
+import mysql2 from 'mysql2'; // Force Vercel to bundle mysql2
 dotenv.config();
 
 const sequelize = new Sequelize(
@@ -10,6 +11,7 @@ const sequelize = new Sequelize(
     host: process.env.DB_HOST || 'localhost',
     port: process.env.DB_PORT || 3306,
     dialect: 'mysql',
+    dialectModule: mysql2, // Explicitly tell Sequelize to use the bundled module
     logging: false, // Set to console.log to see SQL queries
     dialectOptions: {
       connectTimeout: 10000,
