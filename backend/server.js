@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import sequelize, { connectDB } from './config/db.js';
 
 import './models/User.js';
 import './models/Article.js';
@@ -39,8 +40,21 @@ app.use(cors({
 
 app.use(express.json());
 
+// Lazy DB connection middleware for serverless
+let isConnected = false;
+app.use(async (req, res, next) => {
+  if (!isConnected) {
+    isConnected = await connectDB();
+  }
+  next();
+});
+
 // Health check endpoint
-app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
+app.get('/health', (req, res) => res.status(200).json({ 
+  status: 'ok', 
+  dbConnected: isConnected,
+  message: isConnected ? 'All good' : 'DB connection failed - check Vercel environment variables'
+}));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/articles', articleRoutes);

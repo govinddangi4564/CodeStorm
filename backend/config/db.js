@@ -21,9 +21,11 @@ export const connectDB = async () => {
   try {
     await sequelize.authenticate();
     console.log('MySQL Connected via Sequelize');
+    return true;
   } catch (error) {
     console.error(`Error connecting to MySQL: ${error.message}`);
-    process.exit(1);
+    // DO NOT exit process here, it crashes Vercel serverless
+    return false;
   }
 };
 
