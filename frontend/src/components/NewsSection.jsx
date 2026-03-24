@@ -3,6 +3,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Newspaper } from 'lucide-react';
+import API_URL from '../config/api';
 
 const NewsSection = () => {
   const [articles, setArticles] = useState([]);
@@ -11,7 +12,7 @@ const NewsSection = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/articles');
+        const res = await axios.get(`${API_URL}/api/articles`);
         setArticles(res.data.data.slice(0, 3));
       } catch (err) {
         console.error(err);

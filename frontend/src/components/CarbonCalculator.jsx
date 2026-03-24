@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import API_URL from '../config/api';
 import { motion } from 'framer-motion';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { AlertCircle, CheckCircle, Leaf } from 'lucide-react';
@@ -37,7 +38,7 @@ const CarbonCalculator = () => {
         if(!user) return alert("Log in to save!");
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.post('http://localhost:5000/api/footprint/calculate', formData, {
+            const res = await axios.post(`${API_URL}/api/footprint/calculate`, formData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setResult(res.data.data.total_kg_co2);

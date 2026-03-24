@@ -3,6 +3,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import PledgeForm from '../components/PledgeForm';
 import { Globe } from 'lucide-react';
+import API_URL from '../config/api';
 
 const PledgePage = () => {
   const [pledges, setPledges] = useState([]);
@@ -10,7 +11,7 @@ const PledgePage = () => {
 
   const fetchPledges = async () => {
       try {
-          const res = await axios.get('http://localhost:5000/api/pledge/all');
+          const res = await axios.get(`${API_URL}/api/pledge/all`);
           setPledges(res.data.data);
       } catch (err) {
           console.error(err);

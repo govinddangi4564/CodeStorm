@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { AuthContext } from '../context/AuthContext';
 import { Star, CheckCircle, Leaf } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import API_URL from '../config/api';
 
 const defaultChallenges = [
   { id: 1, title: 'Meatless Monday', description: 'Eat plant-based meals all day.', xp_reward: 50, icon: 'Leaf' },
@@ -18,7 +19,7 @@ const ChallengesSection = () => {
 
   useEffect(() => {
     // Attempt to fetch from DB, fallback to default
-    axios.get('http://localhost:5000/api/challenges')
+    axios.get(`${API_URL}/api/challenges`)
       .then(res => {
         if(res.data.data.length > 0) setChallenges(res.data.data);
         else setChallenges(defaultChallenges);
@@ -35,7 +36,7 @@ const ChallengesSection = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.post(`http://localhost:5000/api/challenges/${id}/complete`, {}, {
+      const res = await axios.post(`${API_URL}/api/challenges/${id}/complete`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setCompletedIds([...completedIds, id]);

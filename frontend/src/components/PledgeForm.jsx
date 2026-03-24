@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Globe } from 'lucide-react';
+import API_URL from '../config/api';
 
 const pledgeOptions = [
   "Use reusable bags and bottles",
@@ -20,7 +21,7 @@ const PledgeForm = ({ onPledgeAdded }) => {
 
   useEffect(() => {
     // Fetch total pledge count
-    axios.get('http://localhost:5000/api/pledge/all')
+    axios.get(`${API_URL}/api/pledge/all`)
       .then(res => setPledgeCount(res.data.count))
       .catch(err => console.log(err));
   }, []);
@@ -42,7 +43,7 @@ const PledgeForm = ({ onPledgeAdded }) => {
     
     setLoading(true);
     try {
-      await axios.post('http://localhost:5000/api/pledge', {
+      await axios.post(`${API_URL}/api/pledge`, {
         ...formData,
         pledgeItems: selectedItems
       });

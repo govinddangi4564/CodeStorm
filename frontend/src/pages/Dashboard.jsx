@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import API_URL from '../config/api';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Leaf, Award, Footprints, Star, TrendingUp, Cpu, FileText, Zap, XCircle, Gift } from 'lucide-react';
@@ -30,7 +31,7 @@ const Dashboard = () => {
       const fetchHistory = async () => {
         try {
           const token = localStorage.getItem('token');
-          const res = await axios.get('http://localhost:5000/api/footprint/history', {
+          const res = await axios.get(`${API_URL}/api/footprint/history`, {
              headers: { Authorization: `Bearer ${token}` }
           });
           const formatted = res.data.data.map(log => ({

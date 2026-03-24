@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
+import API_URL from '../config/api';
 
 const Articles = () => {
   const [articles, setArticles] = useState([]);
@@ -16,8 +17,8 @@ const Articles = () => {
       setLoading(true);
       try {
         const url = category === 'All' 
-          ? 'http://localhost:5000/api/articles' 
-          : `http://localhost:5000/api/articles?category=${category}`;
+          ? `${API_URL}/api/articles` 
+          : `${API_URL}/api/articles?category=${category}`;
         const res = await axios.get(url);
         setArticles(res.data.data);
       } catch (err) {
