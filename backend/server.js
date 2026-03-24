@@ -1,7 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import sequelize, { connectDB } from './config/db.js';
 
 import './models/User.js';
 import './models/Article.js';
@@ -49,17 +48,4 @@ app.use('/api/pledge', pledgeRoutes);
 app.use('/api/footprint', footprintRoutes);
 app.use('/api/challenges', challengeRoutes);
 
-// Only connect DB and listen when NOT on Vercel
-// On Vercel, api/index.js handles DB connection per cold start
-if (!process.env.VERCEL) {
-  await connectDB();
-  sequelize.sync({ alter: true }).then(() => console.log('Sequelize Models synced'));
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-}
-
 export default app;
-
-
