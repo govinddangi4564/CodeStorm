@@ -20,8 +20,15 @@ dotenv.config();
 const app = express();
 
 // CORS configuration
+const allowedOrigins = [process.env.CLIENT_URL, 'http://localhost:5173'].filter(Boolean);
 app.use(cors({
-  origin: process.env.CLIENT_URL || true, // Use environment variable or reflect requesting origin as fallback
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 
