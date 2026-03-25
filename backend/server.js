@@ -21,7 +21,7 @@ const app = express();
 
 // CORS configuration
 app.use(cors({
-  origin: true, // Automatically reflect requesting origin
+  origin: process.env.CLIENT_URL || true, // Use environment variable or reflect requesting origin as fallback
   credentials: true,
 }));
 

@@ -15,6 +15,10 @@ const sequelize = new Sequelize(
     logging: false, // Set to console.log to see SQL queries
     dialectOptions: {
       connectTimeout: 10000,
+      ssl: process.env.DB_HOST && process.env.DB_HOST !== 'localhost' ? {
+        minVersion: 'TLSv1.2',
+        rejectUnauthorized: true
+      } : false
     },
   }
 );
