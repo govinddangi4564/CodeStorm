@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import sequelize, { connectDB } from './config/db.js';
+import { connectDB } from './config/db.js';
 
 import './models/User.js';
 import './models/Article.js';
@@ -19,22 +19,19 @@ dotenv.config();
 
 const app = express();
 
-// CORS configuration
-const allowedOrigins = [process.env.CLIENT_URL, 'http://localhost:5173'].filter(Boolean);
+// ✅ SINGLE CORS CONFIG (IMPORTANT)
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
+  origin: [
+    "https://climate-change-prediction.vercel.app",
+    "http://localhost:5173"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
 }));
 
 app.use(express.json());
 
-// Lazy DB connection middleware for serverless
+// DB connection
 let isConnected = false;
 app.use(async (req, res, next) => {
   if (!isConnected) {
@@ -43,15 +40,8 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// Health check endpoint
-app.get('/health', (req, res) => res.status(200).json({ 
-  status: 'ok', 
-  dbConnected: isConnected,
-  message: isConnected ? 'All good' : 'DB connection failed - check Vercel environment variables'
-}));
-
-// Root endpoint just to say we're alive
-app.get('/', (req, res) => res.status(200).send('Climate API is running! 🌍'));
+// Routes
+app.get('/', (req, res) => res.send('API running 🚀'));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/articles', articleRoutes);
